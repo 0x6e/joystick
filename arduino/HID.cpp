@@ -29,6 +29,7 @@
 
 Mouse_ Mouse;
 Keyboard_ Keyboard;
+Joystick_ Joystick;
 
 //================================================================================
 //================================================================================
@@ -124,8 +125,37 @@ const u8 _hidReportDescriptor[] = {
 	0x95, 64,				// report count RX
 	0x09, 0x02,				// usage
 	0x91, 0x02,				// Output (array)
-	0xC0					// end collection
+	0xC0,					// end collection
 #endif
+
+	// JOYSTICK
+    0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
+    0x09, 0x04,                    // USAGE (Joystick)
+    0xa1, 0x01,                    // COLLECTION (Application)
+    0x85, 0x04,                    //   REPORT_ID (4)
+    0x05, 0x01,                    //   USAGE_PAGE (Generic Desktop)
+    0x09, 0x01,                    //   USAGE (Pointer)
+    0xa1, 0x00,                    //   COLLECTION (Physical)
+    0x09, 0x30,                    //     USAGE (X)
+    0x09, 0x31,                    //     USAGE (Y)
+    0x15, 0x81,                    //     LOGICAL_MINIMUM (-127)
+    0x25, 0x7f,                    //     LOGICAL_MAXIMUM (127)
+    0x75, 0x08,                    //     REPORT_SIZE (8)
+    0x95, 0x02,                    //     REPORT_COUNT (2)
+    0x81, 0x02,                    //     INPUT (Data,Var,Abs)
+    0xc0,                          //   END_COLLECTION
+    0x05, 0x09,                    //   USAGE_PAGE (Button)
+    0x19, 0x01,                    //   USAGE_MINIMUM (Button 1)
+    0x29, 0x01,                    //   USAGE_MAXIMUM (Button 1)
+    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+    0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
+    0x35, 0x00,                    //   PHYSICAL_MINIMUM (0)
+    0x45, 0x01,                    //   PHYSICAL_MAXIMUM (1)
+    0x95, 0x01,                    //   REPORT_COUNT (1)
+    0x75, 0x01,                    //   REPORT_SIZE (1)
+    0x65, 0x00,                    //   UNIT (None)
+    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+    0xc0                           // END_COLLECTION
 };
 
 extern const HIDDescriptor _hidInterface PROGMEM;
@@ -514,6 +544,29 @@ size_t Keyboard_::write(uint8_t c)
 	uint8_t r = release(c);		// Keyup
 	return (p);					// just return the result of press() since release() almost always returns 1
 }
+
+//================================================================================
+//================================================================================
+//  Joystick
+
+
+Joystick_::Joystick_(void)
+{
+
+}
+
+
+void Joystick_::setState(JoystickState_t* state)
+{
+	int8_t data[3];
+
+	data[0] = state->xAxis;
+	data[1] = state->yAxis;
+	data[2] = state->buttons;
+
+	HID_SendReport(4, data, 3);
+}
+
 
 #endif
 

@@ -137,6 +137,26 @@ extern Keyboard_ Keyboard;
 
 //================================================================================
 //================================================================================
+//  Joystick
+
+typedef struct JoystickState
+{
+	int8_t	xAxis;
+	int8_t	yAxis;
+	uint8_t	buttons;
+
+} JoystickState_t;
+
+class Joystick_
+{
+public:
+	Joystick_(void);
+	void setState(JoystickState_t* state);
+};
+extern Joystick_ Joystick;
+
+//================================================================================
+//================================================================================
 //	Low level API
 
 typedef struct
