@@ -139,19 +139,19 @@ extern Keyboard_ Keyboard;
 //================================================================================
 //  Joystick
 
-typedef struct JoystickState
+typedef struct
 {
 	int8_t	xAxis;
 	int8_t	yAxis;
 	uint8_t	buttons;
 
-} JoystickState_t;
+} JoystickState;
 
 class Joystick_
 {
 public:
 	Joystick_(void);
-	void setState(JoystickState_t* state);
+	void setState(JoystickState* state);
 };
 extern Joystick_ Joystick;
 
